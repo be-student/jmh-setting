@@ -16,19 +16,56 @@
 package me.champeau.jmh;
 
 import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.Fork;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
 
 @State(Scope.Benchmark)
 public class SampleBenchmark {
+    @Fork(1)
     @Benchmark
     public void fibClassic(Blackhole bh) {
-        bh.consume(Fib.fibClassic(30));
+        bh.consume(func1());
     }
 
+    @Fork(1)
     @Benchmark
     public void fibTailRec(Blackhole bh) {
-        bh.consume(Fib.tailRecFib(30));
+        bh.consume(func2());
+    }
+
+    @Fork(1)
+    @Benchmark
+    public void fibTailRec2(Blackhole bh) {
+        bh.consume(func3());
+    }
+
+    private Object func1(){
+        try{
+           return new Object();
+        }catch (Exception e){
+            return new Object();
+        }
+    }
+    private Object func2(){
+        try{
+            return new Exception();
+        }catch (Exception e){
+            return new Exception();
+        }
+    }
+
+    private Object func3(){
+        try {
+            return new NoStackTrace();
+        } catch (Exception e) {
+            return new NoStackTrace();
+        }
+    }
+}
+class NoStackTrace extends Throwable{
+    public NoStackTrace(){
+        super(null,null,false,false);
     }
 }
